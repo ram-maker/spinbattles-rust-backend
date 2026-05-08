@@ -1,0 +1,7 @@
+target/
+.env
+*.pem
+test-ledger/
+.anchor/
+game-server/target/
+backend/target/

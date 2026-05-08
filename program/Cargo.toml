@@ -1,0 +1,25 @@
+[package]
+name = "spinbattles-program"
+version = "0.1.0"
+edition = "2021"
+
+# Exclude from any parent workspace — Anchor manages its own build
+[workspace]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "spinbattles_program"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29"
+anchor-spl = "0.29"
+
+[dev-dependencies]
+anchor-client = "0.29"
