@@ -7,6 +7,8 @@ You have been assigned the **Solana / Anchor Program** track.
 ## Time Estimate
 2-3 hours
 
+> Focus on HIGH priority items first. This is the most demanding track — completing all tasks is not expected. A strong submission covers Ed25519 verification, the key security fixes, and at least one passing test.
+
 ## Context
 
 `program/src/lib.rs` uses the **authorized signer pattern**: every `claim_reward` instruction must include a signature from the backend. The backend is the trusted off-chain authority that verifies battle results before signing.

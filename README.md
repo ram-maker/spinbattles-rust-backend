@@ -26,8 +26,9 @@ spinbattles-rust-assessment/
 ├── game-server/      # Rust/Axum game server (battle results authority)
 ├── backend/          # Rust/Axum REST API (reward signer)
 ├── program/          # Solana/Anchor smart program
-├── tasks/            # Role-specific assessment tasks
-└── docs/             # Documentation
+├── tasks/            # Role-specific assessment tasks (one per candidate track)
+├── docs/             # Architecture and project documentation
+└── frontend/         # Created by Fullstack candidates during assessment
 ```
 
 ## For Candidates
@@ -37,6 +38,8 @@ You will be assigned **ONE specific task** based on your role:
 - `TASK_BACKEND.md` — Rust backend developers
 - `TASK_SMART_CONTRACT.md` — Solana/Anchor program developers
 - `TASK_SECURITY_REVIEW.md` — Security-focused developers
+- `TASK_DEVOPS.md` — DevOps / infrastructure engineers
+- `TASK_FULLSTACK.md` — Fullstack developers
 
 Please only complete your assigned task. Other task files are included because we use the same repository for different candidate profiles.
 

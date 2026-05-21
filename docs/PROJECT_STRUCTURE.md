@@ -50,7 +50,9 @@ spinbattles-rust-assessment/
 ├── tasks/
 │   ├── TASK_BACKEND.md
 │   ├── TASK_SMART_CONTRACT.md
-│   └── TASK_SECURITY_REVIEW.md
+│   ├── TASK_SECURITY_REVIEW.md
+│   ├── TASK_DEVOPS.md
+│   └── TASK_FULLSTACK.md
 │
 └── docs/
     ├── ASSESSMENT_GUIDELINES.md

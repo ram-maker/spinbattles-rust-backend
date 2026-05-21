@@ -86,6 +86,12 @@ The program's `initialize` instruction requires the signer pubkey from Step 3.
 ### Backend / Security candidates
 Both services are running — open your assigned task file and begin.
 
+### DevOps candidates
+Both services are running locally — your task is to containerize them. Open `tasks/TASK_DEVOPS.md` and begin.
+
+### Fullstack candidates
+Both services are running — your task is to build the frontend UI. Open `tasks/TASK_FULLSTACK.md` and begin. The full API reference is in `docs/PROJECT_STRUCTURE.md`.
+
 ---
 
 ## Common Issues

@@ -77,7 +77,7 @@ This assessment evaluates practical Rust and Web3 development skills in a realis
 A: Yes, reasonable dependencies are fine. Explain why you chose them.
 
 **Q: Should I write tests?**
-A: Not required for Backend/Security tracks, but a few key tests are a plus. Required for Smart Contract track.
+A: Not required for Backend/Security/DevOps/Fullstack tracks, but a few key tests are a plus. Required for Smart Contract track.
 
 **Q: What if I can't finish everything?**
 A: That's okay. Focus on high-priority items and explain what you would do with more time.
