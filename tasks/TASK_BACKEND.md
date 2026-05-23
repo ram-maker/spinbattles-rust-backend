@@ -115,6 +115,8 @@ Improve error messages and logging across any service or route file. Errors shou
 
 ## Submission
 
+Submit from a **fork** or **`candidate/<your-name>` branch** — do not push to `main`. Send a pull request or ZIP.
+
 1. Updated code (ZIP, GitHub repo, or pull request)
 2. Brief summary (3-5 sentences): what you implemented, key decisions, tradeoffs
 3. Commands to test your changes

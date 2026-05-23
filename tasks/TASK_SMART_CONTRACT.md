@@ -168,6 +168,8 @@ Review `claim_reward` for compute unit improvements. Consider:
 
 ## Submission
 
+Submit from a **fork** or **`candidate/<your-name>` branch** — do not push to `main`. Send a pull request or ZIP.
+
 1. Updated `program/src/lib.rs` with fixes and comments
 2. Test file(s) with results (`anchor test` output)
 3. Summary (5-7 sentences): vulnerabilities found, fixes applied, tradeoffs

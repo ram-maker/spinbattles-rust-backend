@@ -45,6 +45,17 @@ Please only complete your assigned task. Other task files are included because w
 
 **Expected Time:** 2-3 hours
 
+## Submission Workflow
+
+This repository uses a shared baseline on `main`. To keep evaluation fair for all candidates:
+
+1. **Fork this repository** (recommended) or work in a branch named `candidate/<your-name>`.
+2. Complete **only your assigned task** in your fork or branch.
+3. Submit your work as a **pull request** to `main` or send a **ZIP** of your changes.
+4. **Do not push directly to `main`.** The `main` branch is the official assessment baseline.
+
+Include a brief summary (3-5 sentences) and commands to test your changes.
+
 ## Quick Start
 
 ```bash

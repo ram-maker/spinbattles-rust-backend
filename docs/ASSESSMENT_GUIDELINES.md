@@ -62,8 +62,20 @@ This assessment evaluates practical Rust and Web3 development skills in a realis
 4. **Explain your decisions** — Add comments and write a brief summary
 5. **Don't overthink it** — We want to see practical skills, not perfection
 
+## Submission Workflow
+
+This repository keeps a shared baseline on `main`. Follow these rules so every candidate is evaluated fairly:
+
+1. **Fork the repository** (recommended) or create a branch named `candidate/<your-name>`.
+2. Work only in your fork or branch — complete your assigned task file only.
+3. Submit a **pull request** to `main` or send a **ZIP** of your changes.
+4. **Never push directly to `main`.**
+
+We review your PR or ZIP for evaluation. Submissions are not merged into `main` unless you are hired.
+
 ## Submission Checklist
 
+- [ ] Work submitted from a fork or `candidate/<your-name>` branch (not direct push to `main`)
 - [ ] Completed the high-priority tasks in your assigned task file
 - [ ] Code compiles without errors (`cargo build`)
 - [ ] Added comments explaining key decisions
@@ -87,6 +99,12 @@ A: Yes, if it helps accomplish your task. Explain what you changed and why.
 
 **Q: Should I deploy to devnet?**
 A: Not required. Local testing with `solana-test-validator` is fine.
+
+**Q: Can I push my changes directly to `main`?**
+A: No. Fork the repo or use a `candidate/<your-name>` branch, then submit a pull request or ZIP.
+
+**Q: Will my pull request be merged?**
+A: We review it for evaluation. It is not merged into `main` unless you are hired.
 
 ## After Submission
 

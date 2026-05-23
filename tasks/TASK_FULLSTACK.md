@@ -124,6 +124,8 @@ GET http://localhost:8080/api/rewards/:address/history
 
 ## Submission
 
+Submit from a **fork** or **`candidate/<your-name>` branch** — do not push to `main`. Send a pull request or ZIP.
+
 1. Frontend source code in a `frontend/` directory at the repo root
 2. `frontend/README.md` with setup and run instructions
 3. Brief summary (3-5 sentences): framework chosen, decisions made, what you would improve with more time
