@@ -4,16 +4,15 @@ use crate::{
     services::game_client,
     state::AppState,
 };
+use solana_sdk::signature::Signature;
 use std::sync::Arc;
+use std::str::FromStr;
 
 /// Reward Service
 ///
 /// Handles reward claim authorisation and history tracking.
-///
-/// Assessment note for Backend candidates:
-///   `record_claim()` needs proper validation — see TODOs.
-///   `get_pending_rewards()` fetches live battle data from the game server.
-///   The sign flow is fully implemented and is required by the on-chain program.
+/// `get_pending_rewards()` fetches live battle data from the game server.
+/// The sign flow is required by the on-chain program.
 
 /// Generate a backend-signed authorisation for a reward claim.
 ///
@@ -88,12 +87,6 @@ pub async fn authorise_claim_signature(
 }
 
 /// Record a completed claim (called after the on-chain tx is confirmed).
-///
-/// TODO (Backend task): Add proper validation:
-///   - Verify the tx_signature format (base58, 64 bytes when decoded)
-///   - Check for duplicate submissions (same tx_signature submitted twice)
-///   - Validate that amount is non-zero and within a reasonable range
-///   - Add a more informative error message for each failure case
 pub async fn record_claim(
     state: &Arc<AppState>,
     address: &str,
@@ -101,7 +94,36 @@ pub async fn record_claim(
     amount: &str,
     tx_signature: &str,
 ) -> Result<String, AppError> {
-    // TODO: Add validation here (Backend task)
+    let amount_lamports = amount
+        .parse::<u64>()
+        .map_err(|_| AppError::BadRequest("amount must be a valid u64 string".into()))?;
+    if amount_lamports == 0 {
+        return Err(AppError::BadRequest("amount must be greater than zero".into()));
+    }
+    if amount_lamports > 10_000_000_000_000 {
+        return Err(AppError::BadRequest("amount exceeds maximum allowed value".into()));
+    }
+
+    let parsed_sig = Signature::from_str(tx_signature)
+        .map_err(|_| AppError::BadRequest("tx_signature must be valid base58".into()))?;
+    let sig_len = bs58::decode(tx_signature)
+        .into_vec()
+        .map_err(|_| AppError::BadRequest("tx_signature must be valid base58".into()))?
+        .len();
+    if sig_len != 64 {
+        return Err(AppError::BadRequest("tx_signature must decode to 64 bytes".into()));
+    }
+
+    {
+        let history = state.claim_history.lock().unwrap();
+        if history
+            .values()
+            .any(|record| record.tx_signature == parsed_sig.to_string())
+        {
+            return Err(AppError::BadRequest("tx_signature already recorded".into()));
+        }
+    }
+
     tracing::info!(
         "Recording claim: address={}, battle={}, amount={}",
         address, battle_id, amount

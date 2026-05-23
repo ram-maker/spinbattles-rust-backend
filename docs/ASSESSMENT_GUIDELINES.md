@@ -97,9 +97,8 @@ A: Not required. Local testing with `solana-test-validator` is fine.
 
 ### Questions or Issues?
 
-If you have questions about the assessment or encounter technical issues, please contact your recruiter:
+If you have questions about the assessment or encounter technical issues, please contact the technical team:
 
-- Technical Recruiter: Mateo Andres
-- Telegram: @spinbattles320
+- Email: tech@spinbattles.com
 
 Good luck! We're excited to see your work.

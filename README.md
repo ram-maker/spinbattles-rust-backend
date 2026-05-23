@@ -15,7 +15,7 @@ Website: [www.spinbattles.com](https://www.spinbattles.com)
 A simplified **Battle Rewards Distribution System** built in Rust:
 
 - Players earn SBR tokens by winning battles
-- A Rust/Axum backend acts as the trusted off-chain authority
+- A Rust backend acts as the trusted off-chain authority
 - It signs reward claims that a Solana program verifies on-chain
 - The backend must be running for any track to function
 
@@ -23,7 +23,7 @@ A simplified **Battle Rewards Distribution System** built in Rust:
 
 ```
 spinbattles-rust-assessment/
-├── game-server/      # Rust/Axum game server (battle results authority)
+├── game-server/      # Rust game server (battle results authority)
 ├── backend/          # Rust/Axum REST API (reward signer)
 ├── program/          # Solana/Anchor smart program
 ├── tasks/            # Role-specific assessment tasks (one per candidate track)
@@ -71,7 +71,7 @@ See `QUICK_START.md` for full setup instructions.
 
 ## Questions?
 
-If anything is unclear about your assigned task, please reach out to your recruiter contact.
+If anything is unclear about your assigned task, contact the technical team at tech@spinbattles.com.
 
 ## License
 

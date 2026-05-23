@@ -8,14 +8,12 @@ name = "spinbattles-game-server"
 path = "src/main.rs"
 
 [dependencies]
-axum = { version = "0.7", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
-tower-http = { version = "0.5", features = ["cors", "trace"] }
+rouille = "3"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha2 = "0.10"
 chrono = "0.4"
 dotenvy = "0.15"
+logflux = "1.0.1"
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-logprinter = "1.0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "registry"] }

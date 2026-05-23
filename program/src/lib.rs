@@ -1,4 +1,9 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::{
+    ed25519_program,
+    instruction::Instruction,
+    sysvar::instructions::{load_current_index_checked, load_instruction_at_checked},
+};
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -17,9 +22,6 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 ///   - GET /api/rewards/signer-pubkey  → get the signer pubkey for initialization
 ///   - POST /api/rewards/sign          → get a signature before calling claim_reward
 ///
-/// NOTE: This program has intentional security issues for assessment purposes.
-///       Smart contract candidates: find and fix them.
-///       Security review candidates: document them.
 #[program]
 pub mod spinbattles_program {
     use super::*;
@@ -59,13 +61,6 @@ pub mod spinbattles_program {
     ///   POST http://localhost:8080/api/rewards/sign
     ///   Body: { address, wallet_signature, wallet_message, battle_id }
     ///
-    /// TODO (Smart Contract task): This function still has security issues.
-    ///   - What happens if amount is 0?
-    ///   - What happens if amount exceeds the vault balance?
-    ///   - Is there a maximum reward cap per battle?
-    ///   - Can the signature be replayed on a different program or cluster?
-    ///   - Is the claim_record PDA seeded securely enough?
-    ///
     /// # Arguments
     /// * `battle_id_hash` - SHA-256 hash of the battle_id string (32 bytes)
     /// * `amount`         - Token amount in lamports — must match what the backend signed
@@ -87,17 +82,25 @@ pub mod spinbattles_program {
         message.extend_from_slice(&amount.to_le_bytes());
 
         let valid = verify_ed25519_signature(
+            &ctx.accounts.instructions.to_account_info(),
             &config.authorized_signer.to_bytes(),
             &message,
             &signature,
         );
         require!(valid, SpinBattlesError::InvalidBackendSignature);
+        require!(amount > 0, SpinBattlesError::InvalidAmount);
+        require!(
+            ctx.accounts.player_token_account.owner == player,
+            SpinBattlesError::InvalidPlayerTokenAccount
+        );
+        require!(
+            ctx.accounts.player_token_account.mint == ctx.accounts.vault.mint,
+            SpinBattlesError::InvalidPlayerTokenAccount
+        );
 
         // Prevent double-claiming
         let claim_record = &mut ctx.accounts.claim_record;
         require!(!claim_record.claimed, SpinBattlesError::AlreadyClaimed);
-
-        // TODO: Add more validation here (Smart Contract task)
 
         // Mark as claimed before transfer (checks-effects-interactions)
         claim_record.claimed = true;
@@ -195,6 +198,10 @@ pub struct ClaimReward<'info> {
     #[account(mut)]
     pub player: Signer<'info>,
 
+    /// CHECK: constrained to the Solana instructions sysvar account.
+    #[account(address = anchor_lang::solana_program::sysvar::instructions::ID)]
+    pub instructions: UncheckedAccount<'info>,
+
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 }
@@ -266,34 +273,97 @@ pub enum SpinBattlesError {
 
     #[msg("Unauthorized")]
     Unauthorized,
+
+    #[msg("Invalid claim amount")]
+    InvalidAmount,
+
+    #[msg("Invalid player token account")]
+    InvalidPlayerTokenAccount,
 }
 
 // ── Crypto helpers ────────────────────────────────────────────────────────────
 
-/// Verify an Ed25519 signature against a message and public key.
+/// Verifies backend signature by checking a prior Ed25519 program instruction.
 ///
-/// TODO (Smart Contract task): This function is a placeholder — it always returns false.
-/// Fix it so `claim_reward` can actually verify backend signatures.
-///
-/// There are two valid approaches:
-///
-/// Option A — Ed25519 native program via instructions sysvar (recommended for production):
-///   The client prepends a `solana_program::ed25519_program` instruction to the transaction.
-///   The program reads and verifies it from `sysvar::instructions`. This is the most
-///   compute-efficient approach and is used by production Solana programs.
-///
-/// Option B — Inline verification using `ed25519-dalek` (simpler, acceptable for assessment):
-///   Add `ed25519-dalek = "2"` to Cargo.toml, then:
-///   ```rust
-///   use ed25519_dalek::{Signature, VerifyingKey};
-///   let vk = VerifyingKey::from_bytes(pubkey_bytes).map_err(|_| false)?;
-///   let sig = Signature::from_bytes(signature_bytes);
-///   vk.verify_strict(message, &sig).is_ok()
-///   ```
-///
-/// Document your chosen approach and its tradeoffs in your submission summary.
-fn verify_ed25519_signature(pubkey_bytes: &[u8; 32], message: &[u8], signature_bytes: &[u8; 64]) -> bool {
-    // INCOMPLETE — implement Ed25519 verification here (Smart Contract task)
-    let _ = (pubkey_bytes, message, signature_bytes);
+/// The transaction must prepend an Ed25519 verify instruction that validates:
+/// `signature(pubkey_bytes, message)`.
+fn verify_ed25519_signature(
+    instructions_sysvar: &AccountInfo,
+    pubkey_bytes: &[u8; 32],
+    message: &[u8],
+    signature_bytes: &[u8; 64],
+) -> bool {
+    let current_index = match load_current_index_checked(instructions_sysvar) {
+        Ok(v) => v as usize,
+        Err(_) => return false,
+    };
+    if current_index == 0 {
+        return false;
+    }
+
+    for index in 0..current_index {
+        let instruction = match load_instruction_at_checked(index, instructions_sysvar) {
+            Ok(v) => v,
+            Err(_) => continue,
+        };
+        if !is_matching_ed25519_ix(&instruction, pubkey_bytes, message, signature_bytes) {
+            continue;
+        }
+        return true;
+    }
     false
+}
+
+fn is_matching_ed25519_ix(
+    ix: &Instruction,
+    expected_pubkey: &[u8; 32],
+    expected_message: &[u8],
+    expected_signature: &[u8; 64],
+) -> bool {
+    if ix.program_id != ed25519_program::id() {
+        return false;
+    }
+    parse_ed25519_ix_data(&ix.data)
+        .map(|(sig, pubkey, message)| {
+            sig == expected_signature.as_slice()
+                && pubkey == expected_pubkey.as_slice()
+                && message == expected_message
+        })
+        .unwrap_or(false)
+}
+
+fn parse_ed25519_ix_data(data: &[u8]) -> Option<(&[u8], &[u8], &[u8])> {
+    const HEADER_LEN: usize = 2;
+    const OFFSETS_LEN: usize = 14;
+    const SELF_IX_INDEX: u16 = u16::MAX;
+
+    if data.len() < HEADER_LEN + OFFSETS_LEN || data[0] != 1 {
+        return None;
+    }
+
+    let offsets = &data[HEADER_LEN..HEADER_LEN + OFFSETS_LEN];
+    let signature_offset = read_u16(offsets, 0)? as usize;
+    let signature_ix_index = read_u16(offsets, 2)?;
+    let pubkey_offset = read_u16(offsets, 4)? as usize;
+    let pubkey_ix_index = read_u16(offsets, 6)?;
+    let message_offset = read_u16(offsets, 8)? as usize;
+    let message_size = read_u16(offsets, 10)? as usize;
+    let message_ix_index = read_u16(offsets, 12)?;
+
+    if signature_ix_index != SELF_IX_INDEX
+        || pubkey_ix_index != SELF_IX_INDEX
+        || message_ix_index != SELF_IX_INDEX
+    {
+        return None;
+    }
+
+    let signature = data.get(signature_offset..signature_offset + 64)?;
+    let pubkey = data.get(pubkey_offset..pubkey_offset + 32)?;
+    let message = data.get(message_offset..message_offset + message_size)?;
+    Some((signature, pubkey, message))
+}
+
+fn read_u16(bytes: &[u8], offset: usize) -> Option<u16> {
+    let slice = bytes.get(offset..offset + 2)?;
+    Some(u16::from_le_bytes([slice[0], slice[1]]))
 }

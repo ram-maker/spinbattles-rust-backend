@@ -2,7 +2,7 @@
 
 ## Overview
 
-A simplified Web3 reward system for SpinBattles game battles. Built in Rust throughout — Axum on the backend and game server, Anchor/Solana on-chain.
+A simplified Web3 reward system for SpinBattles game battles. Built in Rust throughout — Rouille game server, Axum backend, Anchor/Solana on-chain.
 
 ## Directory Structure
 
@@ -11,12 +11,19 @@ spinbattles-rust-assessment/
 ├── README.md
 ├── QUICK_START.md
 │
-├── game-server/                    # Rust/Axum game server (fully implemented — run first)
+├── game-server/                    # Rust/Rouille game server (fully implemented — run first)
 │   ├── Cargo.toml
 │   └── src/
-│       └── main.rs                 # Battle results authority; backend calls this
+│       ├── main.rs                 # Server entrypoint
+│       ├── audit_log.rs            # Audit logging worker bootstrap
+│       ├── mock_data.rs            # Deterministic battle data helpers
+│       ├── models.rs               # JSON response models
+│       └── routes/                 # Health and battle routes
+│           ├── mod.rs
+│           ├── health.rs
+│           └── battles.rs
 │
-├── backend/                        # Rust/Axum REST API (candidate task)
+├── backend/                        # Rust/Axum REST API (trusted signer service)
 │   ├── Cargo.toml
 │   ├── .env.example
 │   └── src/
@@ -34,10 +41,10 @@ spinbattles-rust-assessment/
 │       └── services/
 │           ├── game_client.rs      # HTTP client for game server calls (fully implemented)
 │           ├── signer_service.rs   # Ed25519 claim signing (fully implemented)
-│           ├── wallet_service.rs   # Signature verification + balance (incomplete — candidate task)
-│           └── reward_service.rs   # Claim authorization + history (partially incomplete)
+│           ├── wallet_service.rs   # Signature verification + balance
+│           └── reward_service.rs   # Claim authorization + history
 │
-├── program/                        # Solana/Anchor program (candidate task)
+├── program/                        # Solana/Anchor program
 │   ├── Cargo.toml
 │   ├── Anchor.toml
 │   ├── package.json
@@ -45,7 +52,7 @@ spinbattles-rust-assessment/
 │   ├── tests/
 │   │   └── spinbattles.ts          # Test skeleton — candidates complete this
 │   └── src/
-│       └── lib.rs                  # SpinBattles program (has intentional issues)
+│       └── lib.rs                  # SpinBattles program
 │
 ├── tasks/
 │   ├── TASK_BACKEND.md
@@ -74,7 +81,7 @@ Player Client
      ↓
 Rust/Axum Backend (port 8080)  ←── trusted signer authority
      ↓  calls for battle data
-Game Server (port 8081)        ←── authoritative battle results source
+Rust/Rouille Game Server (port 8081) ←── authoritative battle results source
      ↓  (Ed25519 signature flows back up)
 Solana Program
      ↓  (SPL token transfer)
@@ -129,19 +136,11 @@ claim_reward(battle_id_hash: [u8; 32], amount: u64, signature: [u8; 64])
 set_authorized_signer(new_signer: Pubkey)
 ```
 
-## Intentional Issues (for candidates to find/fix)
+## Current Notes
 
-**Backend:**
-- `verify_signature()` is a stub — always returns `false`
-- `get_token_balance()` has the real RPC call as a TODO comment
-- `record_claim()` has no duplicate check, no format validation, no amount sanity check
-
-**Program:**
-- `verify_ed25519_signature()` is a placeholder — always returns `false`
-- No amount validation (zero or overflow)
-- No reward cap per battle
-- Signature replay possible across clusters
-- `initialize` can be called multiple times (no guard)
+- Backend performs wallet signature verification and claim-record validation.
+- Program verifies backend authorization using the Ed25519 native instruction/sysvar pattern.
+- Token-balance lookup still uses deterministic fallback data unless RPC integration is enabled.
 
 ## Environment Variables
 
