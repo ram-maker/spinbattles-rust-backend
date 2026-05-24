@@ -120,4 +120,4 @@ Don't spend more than 3 hours. We value your time.
 
 ## Questions?
 
-Contact your recruiter if you have setup issues or questions about requirements.
+Contact the technical team at tech@spinbattles.com if you have setup issues or questions about requirements.

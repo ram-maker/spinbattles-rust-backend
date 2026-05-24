@@ -118,7 +118,7 @@ Cover:
 
 ## Submission
 
-Submit from a **fork** or **`candidate/<your-name>` branch** — do not push to `main`. Send a pull request or ZIP.
+Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
 
 1. `game-server/Dockerfile`
 2. `backend/Dockerfile`

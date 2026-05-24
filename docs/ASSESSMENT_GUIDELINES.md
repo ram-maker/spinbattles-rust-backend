@@ -66,7 +66,7 @@ This assessment evaluates practical Rust and Web3 development skills in a realis
 
 This repository keeps a shared baseline on `main`. Follow these rules so every candidate is evaluated fairly:
 
-1. **Fork the repository** (recommended) or create a branch named `candidate/<your-name>`.
+1. **Fork the repository** (required if you have read-only access) or create a branch named `candidate/<your-name>` if you were given write access to this repo.
 2. Work only in your fork or branch — complete your assigned task file only.
 3. Submit a **pull request** to `main` or send a **ZIP** of your changes.
 4. **Never push directly to `main`.**
@@ -102,6 +102,9 @@ A: Not required. Local testing with `solana-test-validator` is fine.
 
 **Q: Can I push my changes directly to `main`?**
 A: No. Fork the repo or use a `candidate/<your-name>` branch, then submit a pull request or ZIP.
+
+**Q: I only have read access — can I use a `candidate/<your-name>` branch on this repo?**
+A: No. With read-only access you must fork the repository, complete your work there, and open a pull request (or send a ZIP).
 
 **Q: Will my pull request be merged?**
 A: We review it for evaluation. It is not merged into `main` unless you are hired.

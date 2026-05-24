@@ -35,11 +35,11 @@ spinbattles-rust-assessment/
 
 You will be assigned **ONE specific task** based on your role:
 
-- `TASK_BACKEND.md` — Rust backend developers
-- `TASK_SMART_CONTRACT.md` — Solana/Anchor program developers
-- `TASK_SECURITY_REVIEW.md` — Security-focused developers
-- `TASK_DEVOPS.md` — DevOps / infrastructure engineers
-- `TASK_FULLSTACK.md` — Fullstack developers
+- `tasks/TASK_BACKEND.md` — Rust backend developers
+- `tasks/TASK_SMART_CONTRACT.md` — Solana/Anchor program developers
+- `tasks/TASK_SECURITY_REVIEW.md` — Security-focused developers
+- `tasks/TASK_DEVOPS.md` — DevOps / infrastructure engineers
+- `tasks/TASK_FULLSTACK.md` — Fullstack developers
 
 Please only complete your assigned task. Other task files are included because we use the same repository for different candidate profiles.
 
@@ -49,10 +49,12 @@ Please only complete your assigned task. Other task files are included because w
 
 This repository uses a shared baseline on `main`. To keep evaluation fair for all candidates:
 
-1. **Fork this repository** (recommended) or work in a branch named `candidate/<your-name>`.
+1. **Fork this repository** (required if you have read-only access) or use a branch named `candidate/<your-name>` on this repo if you were given write access.
 2. Complete **only your assigned task** in your fork or branch.
 3. Submit your work as a **pull request** to `main` or send a **ZIP** of your changes.
 4. **Do not push directly to `main`.** The `main` branch is the official assessment baseline.
+
+See `docs/ASSESSMENT_GUIDELINES.md` for the full checklist and FAQ.
 
 Include a brief summary (3-5 sentences) and commands to test your changes.
 

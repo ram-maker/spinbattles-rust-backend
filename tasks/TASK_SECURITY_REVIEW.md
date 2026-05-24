@@ -136,7 +136,7 @@ For your top 3 issues, provide fixed code — either as snippets in your reports
 
 ## Submission
 
-Submit from a **fork** or **`candidate/<your-name>` branch** — do not push to `main`. Send a pull request or ZIP.
+Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
 
 1. `SECURITY_REPORT_PROGRAM.md`
 2. `SECURITY_REPORT_BACKEND.md`
