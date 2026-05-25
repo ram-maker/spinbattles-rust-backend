@@ -114,7 +114,7 @@ Consider the full system design:
 - Are there replay attack vectors? (different cluster, different program ID, expired signatures)
 - Is the in-memory claim history a security risk?
 - What economic attacks are possible against the reward vault?
-- Is the `verify_signature` placeholder a security risk in its current state?
+- Is the `verify_signature` implementation correct for the wallet ownership check used before signing?
 
 Add an `## Architecture Concerns` section to either report.
 

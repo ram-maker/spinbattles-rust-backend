@@ -9,7 +9,7 @@ You have been assigned the **Fullstack** track.
 
 ## Context
 
-SpinBattles needs a minimal web UI so players can connect their Solana wallet, check their SBR token balance, view pending battle rewards, and initiate a reward claim. The backend API is already built — your job is to build the frontend that talks to it.
+SpinBattles needs a minimal web UI so players can connect their Solana wallet, check their SBR token balance, view pending battle rewards, and initiate a reward claim. The backend API is already built and includes working wallet signature verification — your job is to build the frontend that talks to it.
 
 You are free to use any frontend framework you are comfortable with (React, Next.js, SvelteKit, Vue). The UI does not need to be polished — functionality and correctness matter more than styling.
 
@@ -93,13 +93,28 @@ GET http://localhost:8080/api/rewards/pending/:address
 Implement the claim flow when a player clicks "Claim" on a pending reward.
 
 **Flow:**
-1. Sign the message `"Verify wallet ownership"` with the connected wallet
+1. Sign the exact message `"Verify wallet ownership"` with the connected wallet
 2. POST to `/api/rewards/sign` with `address`, `wallet_signature`, `wallet_message`, `battle_id`
-3. On success, display the returned signature and amount to the user
-4. POST to `/api/rewards/claim` with the claim details
-5. Show success or error feedback
+3. On success, display the returned `signature`, `amount_lamports`, and `expires_at`
+4. POST to `/api/rewards/claim` with `address`, `battle_id`, `amount`, and `tx_signature`
+5. Show success or error feedback and refresh the pending list
 
-**Note:** The backend's `verify_signature` is currently a stub that always returns `false`, so `/api/rewards/sign` will return `SignatureVerificationFailed`. Document this in your summary and show how your code would work once the backend stub is fixed.
+**Requirements:**
+- The backend verifies the wallet Ed25519 signature — use the exact message string above
+- Handle `SignatureVerificationFailed` and other API errors with clear user-visible messages
+- CORS is already enabled on the backend for local frontend development
+
+**Test the sign step manually (optional):**
+```bash
+curl -X POST http://localhost:8080/api/rewards/sign \
+  -H "Content-Type: application/json" \
+  -d '{
+    "address": "<your_pubkey>",
+    "wallet_signature": "<signature_of_Verify_wallet_ownership>",
+    "wallet_message": "Verify wallet ownership",
+    "battle_id": "<battle_id_from_pending_list>"
+  }'
+```
 
 ### 5. Reward History (Priority: LOW)
 
