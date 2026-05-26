@@ -7,13 +7,22 @@ You have been assigned the **Solana / Anchor Program** track.
 ## Time Estimate
 2-3 hours
 
-> Focus on HIGH priority items first. This is the most demanding track — completing all tasks is not expected. A strong submission covers Ed25519 verification, the key security fixes, and at least one passing test.
+> Focus on HIGH priority items first. This is the most demanding track — completing all tasks is not expected. A strong submission covers meaningful program security fixes, at least two passing integration tests, and a clear summary.
 
 ## Context
 
 `program/src/lib.rs` uses the **authorized signer pattern**: every `claim_reward` instruction must include a signature from the backend. The backend is the trusted off-chain authority that verifies battle results before signing.
 
-This means you **must have the backend running** to test your program — the `initialize` instruction requires the backend signer pubkey, and `claim_reward` will fail with `InvalidBackendSignature` unless you pass a signature obtained from the backend.
+The baseline already includes a working core on-chain flow:
+
+- Backend Ed25519 authorization via the **instructions sysvar** (`verify_ed25519_signature`)
+- Basic claim validation (`amount > 0`, player token account owner/mint checks)
+- `claim_record` PDA with double-claim protection
+- Vault constraint tied to `config.vault`
+
+Your job is to **harden the program and complete integration tests** — not re-implement what is already there.
+
+You **must have the game server and backend running** to test end-to-end — `initialize` needs the backend signer pubkey, and `claim_reward` needs a signature from `POST /api/rewards/sign`.
 
 ## Setup (Required)
 
@@ -52,116 +61,60 @@ anchor test --skip-local-validator   # or: solana-test-validator in another term
 
 ## Your Tasks
 
-### 1. Fix Ed25519 Signature Verification (Priority: HIGH)
+### 1. Program Security Review & Fixes (Priority: HIGH)
 
 **File:** `program/src/lib.rs`
-**Function:** `verify_ed25519_signature()`
 
-The current placeholder always returns `false` — the program will reject every claim. Fix it.
+Review the program for remaining vulnerabilities and fix the ones you consider most important. The baseline is not production-ready.
 
-**The correct approach for Anchor programs:**
+**Examples to investigate (not an exhaustive list):**
+- Can a claim drain more tokens than the vault holds?
+- Is there a sensible maximum reward cap per claim?
+- Does `initialize` validate that the vault token account uses the expected mint and authority?
+- Can the same backend authorization be abused across unintended contexts (wrong vault, wrong player token account, etc.)?
+- Are account constraints on `ClaimReward` complete and minimal?
 
-Use the `Ed25519` native program via the `instructions` sysvar. This is the production-standard pattern:
+Implement at least **two** concrete fixes with brief inline comments explaining each one.
 
-```rust
-// In your ClaimReward accounts struct, add:
-pub sysvar_instructions: AccountInfo<'info>,
+### 2. Complete Anchor Integration Tests (Priority: HIGH)
 
-// In claim_reward, verify using the sysvar:
-use solana_program::sysvar::instructions;
-// The client must prepend an Ed25519 instruction to the transaction.
-// The program then reads and verifies it from the sysvar.
-```
+**File:** `program/tests/spinbattles.ts`
 
-Alternatively, use the `ed25519-dalek` crate for inline verification (simpler for the assessment, less gas-efficient).
+The test skeleton is intentionally incomplete. Finish it so it exercises the real backend + program flow.
 
-Document your approach and tradeoffs in your summary.
+**Requirements:**
+- Deploy and `initialize` the program with the backend signer pubkey from `/api/rewards/signer-pubkey`
+- Fetch a pending battle from `/api/rewards/pending/:address`
+- Sign the exact message `"Verify wallet ownership"` with the test wallet (backend verifies this)
+- Call `POST /api/rewards/sign`, then invoke `claim_reward` on-chain with the returned signature
+- Add at least **two passing tests**, for example:
+  - successful claim with valid backend signature
+  - rejection without a valid backend signature **or** double-claim prevention
 
-### 2. Security Review & Fixes (Priority: HIGH)
+The backend wallet verification is already implemented — use `"Verify wallet ownership"` exactly.
 
-The program has intentional security issues. Find and fix them. The `TODO` comments in `claim_reward` point you in the right direction, but there are more issues beyond those hints.
+### 3. Transaction Construction for Ed25519 Sysvar Verification (Priority: MEDIUM)
 
-**What to look for:**
-- Can the signature be replayed on a different program or cluster?
-- What happens if `amount` is 0 or exceeds the vault balance?
-- Is the `claim_record` PDA seeded securely? Could two different battles collide?
-- Should there be a maximum reward cap per claim?
-- What happens if `initialize` is called twice?
+**Files:** `program/tests/spinbattles.ts` (and helper code if needed)
 
-### 3. Write Anchor Tests (Priority: HIGH)
+`claim_reward` expects a **prior Ed25519 verify instruction** in the same transaction (read via the instructions sysvar). Your client/test code must prepend that instruction correctly when calling the program.
 
-Your tests must interact with the backend to get real signatures. This mirrors how the program works in production.
+**Requirements:**
+- Build a transaction that prepends the Ed25519 instruction matching the backend-signed message layout:
+  `player_pubkey (32) || battle_id_hash (32) || amount_lamports (8 LE)`
+- Document briefly in your summary how your test constructs this transaction
 
-```typescript
-// tests/spinbattles.ts
-import * as anchor from "@coral-xyz/anchor";
-import axios from "axios";
-import * as crypto from "crypto";
+### 4. Compute & Account Layout Review (Priority: LOW)
 
-describe("spinbattles", () => {
-  it("claims reward with valid backend signature", async () => {
-    const provider = anchor.AnchorProvider.env();
-    anchor.setProvider(provider);
-
-    // Get signer pubkey from backend
-    const { data: signerData } = await axios.get(
-      "http://localhost:8080/api/rewards/signer-pubkey"
-    );
-
-    // Initialize program with backend signer
-    // ... (deploy and initialize)
-
-    // Get pending battles for the player
-    const { data: pending } = await axios.get(
-      `http://localhost:8080/api/rewards/pending/${provider.wallet.publicKey}`
-    );
-    const battle = pending.pending_rewards[0];
-
-    // Get a backend signature
-    // NOTE: /api/rewards/sign requires wallet signature verification.
-    // You may need to implement verify_signature() in the backend first,
-    // or temporarily bypass it — document your approach.
-    const { data: auth } = await axios.post(
-      "http://localhost:8080/api/rewards/sign",
-      {
-        address: provider.wallet.publicKey.toString(),
-        wallet_signature: "<sign wallet_message with player keypair>",
-        wallet_message: "Verify wallet ownership",
-        battle_id: battle.battle_id,
-      }
-    );
-
-    // Call claim_reward with the backend signature
-    // ...
-
-    // Verify the claim_record PDA is marked as claimed
-    // ...
-  });
-
-  it("rejects claim without valid backend signature", async () => {
-    // ...
-  });
-
-  it("prevents double claiming", async () => {
-    // ...
-  });
-});
-```
-
-### 4. Gas Optimization (Priority: LOW)
-
-Review `claim_reward` for compute unit improvements. Consider:
-- Using the Ed25519 native program instead of inline verification
-- Reducing account data sizes
-- Removing redundant checks
+Review `claim_reward` for compute and account-size improvements. The program already uses the native Ed25519 program via the sysvar — focus on redundant work, account sizes, or unnecessary allocations.
 
 ---
 
 ## What We're Evaluating
 
-- Can you identify real Solana/Anchor vulnerabilities?
-- Do you understand the authorized signer pattern and its security implications?
-- Can you write tests that integrate with an external service?
+- Can you identify real Solana/Anchor vulnerabilities beyond the baseline?
+- Do you understand the authorized signer pattern and the Ed25519 sysvar flow?
+- Can you write tests that integrate with the running backend?
 - Is your Rust idiomatic and your Anchor usage correct?
 
 ---
@@ -171,5 +124,5 @@ Review `claim_reward` for compute unit improvements. Consider:
 Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
 
 1. Updated `program/src/lib.rs` with fixes and comments
-2. Test file(s) with results (`anchor test` output)
+2. Completed `program/tests/spinbattles.ts` with `anchor test` output
 3. Summary (5-7 sentences): vulnerabilities found, fixes applied, tradeoffs

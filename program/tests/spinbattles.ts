@@ -6,8 +6,8 @@ import * as crypto from "crypto";
 /**
  * SpinBattles Program Tests
  *
- * These tests interact with the running backend to get real signatures.
- * Both services must be running before you run these tests:
+ * These tests interact with the running game server and backend to obtain
+ * real claim authorizations. Both services must be running before you run tests:
  *
  *   Terminal 1: cd game-server && cargo run
  *   Terminal 2: cd backend && cargo run
@@ -15,12 +15,15 @@ import * as crypto from "crypto";
  * Then run tests:
  *   anchor test --skip-local-validator
  *
- * NOTE: /api/rewards/sign requires wallet signature verification (verify_signature).
- * You may need to implement that in the backend first, or temporarily bypass it
- * for testing purposes — document your approach in your submission summary.
+ * Backend wallet verification is implemented. Sign the exact message
+ * "Verify wallet ownership" before calling POST /api/rewards/sign.
+ *
+ * claim_reward also requires a prior Ed25519 verify instruction in the same
+ * transaction (instructions sysvar pattern). See TASK_SMART_CONTRACT.md.
  */
 
 const BACKEND_URL = "http://localhost:8080";
+const WALLET_MESSAGE = "Verify wallet ownership";
 
 describe("spinbattles", () => {
   const provider = anchor.AnchorProvider.env();
@@ -44,31 +47,25 @@ describe("spinbattles", () => {
     const battle = pending.pending_rewards[0];
     console.log("Battle to claim:", battle.battle_id);
 
-    // Step 4: Sign the wallet message to prove ownership
-    // TODO: sign "Verify wallet ownership" with the player keypair
+    // Step 4: Sign the wallet ownership message (backend verifies this)
+    // TODO: sign WALLET_MESSAGE with the player keypair and base58-encode it
     // const walletSignature = await provider.wallet.signMessage(
-    //   Buffer.from("Verify wallet ownership")
+    //   Buffer.from(WALLET_MESSAGE)
     // );
 
-    // Step 5: Get a backend claim signature
+    // Step 5: Get a backend claim authorization
     // const { data: auth } = await axios.post(`${BACKEND_URL}/api/rewards/sign`, {
     //   address: playerPubkey,
     //   wallet_signature: bs58.encode(walletSignature),
-    //   wallet_message: "Verify wallet ownership",
+    //   wallet_message: WALLET_MESSAGE,
     //   battle_id: battle.battle_id,
     // });
     // console.log("Backend signature:", auth.signature);
 
-    // Step 6: Call claim_reward on the program
-    // TODO: build the battle_id_hash (SHA-256 of battle_id string)
-    // const battleIdHash = crypto.createHash("sha256")
-    //   .update(battle.battle_id)
-    //   .digest();
-    // const signatureBytes = bs58.decode(auth.signature);
-    // await program.methods
-    //   .claimReward([...battleIdHash], new anchor.BN(auth.amount_lamports), [...signatureBytes])
-    //   .accounts({ ... })
-    //   .rpc();
+    // Step 6: Build battle_id_hash and prepend Ed25519 verify ix, then claim
+    // TODO: battle_id_hash = SHA-256(battle.battle_id)
+    // TODO: prepend Ed25519 instruction for backend signer + message layout
+    // TODO: call program.methods.claimReward(...).accounts({ ... }).rpc()
 
     // Step 7: Verify the claim_record PDA is marked as claimed
     // const claimRecord = await program.account.claimRecord.fetch(claimRecordPda);
