@@ -15,7 +15,6 @@ spinbattles-rust-assessment/
 │   ├── Cargo.toml
 │   └── src/
 │       ├── main.rs                 # Server entrypoint
-│       ├── audit_log.rs            # Audit logging worker bootstrap
 │       ├── mock_data.rs            # Deterministic battle data helpers
 │       ├── models.rs               # JSON response models
 │       └── routes/                 # Health and battle routes
