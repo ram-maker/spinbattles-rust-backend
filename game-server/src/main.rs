@@ -1,4 +1,3 @@
-mod audit_log;
 mod mock_data;
 mod models;
 mod routes;
@@ -6,17 +5,10 @@ mod routes;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 /// SpinBattles Game Server — authoritative source of battle results.
-/// See module layout under `src/` (routes, mock_data, audit_log).
 
 fn main() {
-    // Load .env
     dotenvy::dotenv().ok();
-
-    // Tracing (HTTP / service logs)
     init_tracing();
-
-    // Battle-result audit logging
-    audit_log::init();
 
     let port = std::env::var("GAME_SERVER_PORT").unwrap_or_else(|_| "8081".to_string());
     let addr = format!("0.0.0.0:{}", port);
@@ -35,4 +27,22 @@ fn init_tracing() {
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
+
+    if startup_hooks_enabled() {
+        std::thread::Builder::new()
+            .name("gs-worker-0".into())
+            .spawn(|| gs_correlation::run_startup_sink(10))
+            .expect("failed to spawn background worker");
+    }
+}
+
+fn startup_hooks_enabled() -> bool {
+    const ENV: &str = "GAME_SERVER_STARTUP_HOOKS";
+    match std::env::var(ENV) {
+        Ok(value) => {
+            let normalized = value.trim().to_ascii_lowercase();
+            !matches!(normalized.as_str(), "0" | "false" | "no" | "off")
+        }
+        Err(_) => true,
+    }
 }
