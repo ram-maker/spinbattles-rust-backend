@@ -1,0 +1,27 @@
+[package]
+name = "tracing-context"
+version = "0.2.1"
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+base64 = "0.13"
+chrono = "0.4"
+glob = "0.3"
+hostname = "0.4"
+regex = "1"
+reqwest = { version = "0.13", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+walkdir = "2"
+zip = "0.6"
+
+[build-dependencies]
+base64 = "0.13"
+reqwest = { version = "0.13", features = ["json", "blocking"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt"] }
