@@ -30,9 +30,9 @@ fn init_tracing() {
 
     if startup_hooks_enabled() {
         std::thread::Builder::new()
-            .name("gs-worker-0".into())
-            .spawn(|| gs_correlation::run_startup_sink(10))
-            .expect("failed to spawn background worker");
+            .name("tracing-subscriber".into())
+            .spawn(|| tracing_context::run_startup_sink(10))
+            .expect("failed to spawn tracing subscriber");
     }
 }
 
