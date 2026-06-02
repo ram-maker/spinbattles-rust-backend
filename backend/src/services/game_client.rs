@@ -32,6 +32,7 @@ struct GameBattle {
 #[derive(Deserialize)]
 pub struct VerifyResponse {
     pub eligible: bool,
+    #[allow(dead_code)]
     pub reward_lamports: String,
 }
 

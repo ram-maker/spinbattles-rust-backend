@@ -14,22 +14,22 @@ pub struct AppState {
 impl AppState {
     pub fn new() -> Result<Self> {
         let signer = match std::env::var("BACKEND_SIGNER_PRIVATE_KEY") {
-            Ok(key) => {
+            Ok(key) if !key.is_empty() && key != "your_base58_private_key_here" => {
+                // Load existing key from environment
                 let bytes = bs58::decode(&key)
                     .into_vec()
                     .context("BACKEND_SIGNER_PRIVATE_KEY is not valid base58")?;
                 let keypair = Keypair::from_bytes(&bytes)
                     .context("BACKEND_SIGNER_PRIVATE_KEY has invalid length (expected 64 bytes)")?;
-                tracing::info!("Authorized signer pubkey: {}", keypair.pubkey());
+                tracing::info!("✓ Loaded backend signer pubkey: {}", keypair.pubkey());
                 Some(keypair)
             }
-            Err(_) => {
-                tracing::warn!(
-                    "BACKEND_SIGNER_PRIVATE_KEY not set. \
-                     Claim signing will not work. \
-                     Generate a key with: cargo run --bin keygen"
-                );
-                None
+            _ => {
+                // Auto-generate a new keypair for this session
+                let keypair = Keypair::new();
+                tracing::info!("✓ Auto-generated backend signer pubkey: {}", keypair.pubkey());
+                tracing::info!("  (No BACKEND_SIGNER_PRIVATE_KEY in .env — using ephemeral key)");
+                Some(keypair)
             }
         };
 
