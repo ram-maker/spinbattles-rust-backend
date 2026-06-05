@@ -1,91 +1,113 @@
-# SpinBattles Rust Web3 Assessment
+# SpinBattles Rust Solana Assessment
 
-## About This Repository
+## About
 
-This is a **technical assessment project** used by SpinBattles for evaluating Rust Web3 developer candidates. This code is intentionally simplified and is **not used in production**. It exists solely for fair, practical evaluation of technical skills.
+This is a technical assessment for Rust Solana developers at SpinBattles. You'll work with a simplified battle rewards system built with Rust backend, Solana smart contracts, and game server integration.
 
-## About SpinBattles
+**Time estimate:** 2-3 hours
 
-SpinBattles is a game development company expanding into Web3-related product areas. This assessment reflects real scenarios we work with: battle rewards, tournament systems, wallet authentication, and blockchain-based game economies.
+## Prerequisites
 
-Website: [www.spinbattles.com](https://www.spinbattles.com)
+- Rust 1.70+
+- Node.js 16+ (smart contract track only)
+- Linux: `pkg-config` and `libssl-dev` (or equivalent) for OpenSSL linking
 
-## Project Overview
+## Your Task
 
-A simplified **Battle Rewards Distribution System** built in Rust:
+Check the `tasks/` folder for your assigned task:
+- `TASK_BACKEND.md` — Rust backend developers
+- `TASK_SMART_CONTRACT.md` — Solana/Anchor developers  
+- `TASK_SECURITY.md` — Security engineers
+- `TASK_DEVOPS.md` — DevOps engineers
+- `TASK_FULLSTACK.md` — Fullstack developers
 
-- Players earn SBR tokens by winning battles
-- A Rust backend acts as the trusted off-chain authority
-- It signs reward claims that a Solana program verifies on-chain
-- The backend must be running for any track to function
-
-## Repository Structure
-
-```
-spinbattles-rust-assessment/
-├── game-server/      # Rust game server (battle results authority)
-├── backend/          # Rust/Axum REST API (reward signer)
-├── program/          # Solana/Anchor smart program
-├── tasks/            # Role-specific assessment tasks (one per candidate track)
-├── docs/             # Architecture and project documentation
-└── frontend/         # Created by Fullstack candidates during assessment
-```
-
-## For Candidates
-
-You will be assigned **ONE specific task** based on your role:
-
-- `tasks/TASK_BACKEND.md` — Rust backend developers
-- `tasks/TASK_SMART_CONTRACT.md` — Solana/Anchor program developers
-- `tasks/TASK_SECURITY_REVIEW.md` — Security-focused developers
-- `tasks/TASK_DEVOPS.md` — DevOps / infrastructure engineers
-- `tasks/TASK_FULLSTACK.md` — Fullstack developers
-
-Please only complete your assigned task. Other task files are included because we use the same repository for different candidate profiles.
-
-**Expected Time:** 2-3 hours
-
-## Submission Workflow
-
-This repository uses a shared baseline on `main`. To keep evaluation fair for all candidates:
-
-1. **Fork this repository** (required if you have read-only access) or use a branch named `candidate/<your-name>` on this repo if you were given write access.
-2. Complete **only your assigned task** in your fork or branch.
-3. Submit your work as a **pull request** to `main` or send a **ZIP** of your changes.
-4. **Do not push directly to `main`.** The `main` branch is the official assessment baseline.
-
-See `docs/ASSESSMENT_GUIDELINES.md` for the full checklist and FAQ.
-
-Include a brief summary (3-5 sentences) and commands to test your changes.
+**Complete only your assigned task.** Other files are for different candidate profiles.
 
 ## Quick Start
 
+### 1. Start Backend (Terminal 1)
 ```bash
-# Terminal 1 — Game Server
-cd game-server
-cargo run
-
-# Terminal 2 — Backend
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env, then:
 cargo run
 ```
 
-Verify both are running:
+Verify: `curl http://localhost:8080/health`
+
+### 2. Start Game Server (Terminal 2)
 ```bash
-curl http://localhost:8081/health
-curl http://localhost:8080/health
-curl http://localhost:8080/api/rewards/signer-pubkey
+cd game-server
+cargo run
 ```
 
-See `QUICK_START.md` for full setup instructions.
+Verify: `curl http://localhost:8081/health`
+
+Both services must be running before you start your task.
+
+## Project Structure
+
+```
+├── game-server/        # Rust game server (port 8081, battle results authority)
+├── backend/            # Rust/Axum REST API (port 8080, reward signer)
+├── program/            # Solana/Anchor smart contract
+└── tasks/              # Your assignment (pick one)
+```
+
+### How It Works
+
+1. Game server provides battle results
+2. Backend verifies battles and signs reward claims  
+3. Solana program verifies backend signatures and distributes rewards
+
+## Submission
+
+**Choose ONE method:**
+
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and complete your task
+3. Email the link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Complete your task and create a ZIP file
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access to this repo:
+1. Create branch `candidate/<your-name>`  
+2. Submit pull request to `main`
+
+**Email format:**
+```
+Subject: SpinBattles Assessment - [Your Name] - [Track]
+
+Repository/Download Link: [link]
+
+Summary: [3-5 sentences describing your work]
+
+Test Commands:
+[how to verify your solution]
+```
+
+## Tips
+
+✅ Read your task file carefully  
+✅ Focus on high-priority items first  
+✅ Test that your code compiles and runs  
+✅ Explain key decisions in comments  
+✅ Don't spend more than 3 hours  
+
+## Common Issues
+
+**Backend returns 503:** Game server isn't running  
+**Port in use:** Change `PORT` in `backend/.env`  
+**Need persistent signer key:** Run `cargo run --bin keygen` in backend/ and add key to `.env`  
 
 ## Questions?
 
-If anything is unclear about your assigned task, contact the technical team at tech@spinbattles.com.
+Email: **tech@spinbattles.com**
 
-## License
+---
 
-This assessment project is © SpinBattles. For evaluation purposes only.
+© SpinBattles. For evaluation purposes only.

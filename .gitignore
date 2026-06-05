@@ -5,3 +5,4 @@ test-ledger/
 .anchor/
 game-server/target/
 backend/target/
+node_modules/
