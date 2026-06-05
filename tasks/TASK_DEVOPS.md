@@ -22,22 +22,20 @@ The system has two Rust services that must run in a specific order:
 Verify the services work locally before containerizing:
 
 ```bash
-# Terminal 1 — Game Server
-cd game-server
-cargo run
-
-# Terminal 2 — Backend
+# Terminal 1 — Backend
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env
+cargo run
+
+# Terminal 2 — Game Server
+cd game-server
 cargo run
 ```
 
 Confirm both are healthy:
 ```bash
-curl http://localhost:8081/health
 curl http://localhost:8080/health
+curl http://localhost:8081/health
 curl http://localhost:8080/api/rewards/signer-pubkey
 ```
 
@@ -118,11 +116,31 @@ Cover:
 
 ## Submission
 
-Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
+**Choose ONE of these methods:**
 
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and add your DevOps files
+3. Email the repository link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Create a ZIP file with your completed work
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the download link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access:
+1. Create branch `candidate/<your-name>`
+2. Submit pull request to `main`
+
+---
+
+**Your submission must include:**
 1. `game-server/Dockerfile`
 2. `backend/Dockerfile`
 3. `docker-compose.yml`
 4. `.github/workflows/ci.yml`
 5. Secrets management documentation
 6. Brief summary (3-5 sentences): decisions made, tradeoffs, what you would add with more time
+
+**Email subject:** `SpinBattles DevOps Assessment - [Your Name]`

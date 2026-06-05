@@ -29,15 +29,13 @@ You **must have the game server and backend running** to test end-to-end — `in
 ### 1. Start the game server and backend
 
 ```bash
-# Terminal 1
-cd game-server
-cargo run
-
-# Terminal 2
+# Terminal 1 — Backend
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env
+cargo run
+
+# Terminal 2 — Game Server
+cd game-server
 cargo run
 ```
 
@@ -121,8 +119,28 @@ Review `claim_reward` for compute and account-size improvements. The program alr
 
 ## Submission
 
-Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
+**Choose ONE of these methods:**
 
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and add your changes
+3. Email the repository link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Create a ZIP file with your completed work
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the download link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access:
+1. Create branch `candidate/<your-name>`
+2. Submit pull request to `main`
+
+---
+
+**Your submission must include:**
 1. Updated `program/src/lib.rs` with fixes and comments
 2. Completed `program/tests/spinbattles.ts` with `anchor test` output
 3. Summary (5-7 sentences): vulnerabilities found, fixes applied, tradeoffs
+
+**Email subject:** `SpinBattles Smart Contract Assessment - [Your Name]`

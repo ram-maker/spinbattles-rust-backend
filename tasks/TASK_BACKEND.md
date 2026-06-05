@@ -23,22 +23,20 @@ Your job is to **extend and harden** the backend — not re-implement what is al
 ## Setup (Required)
 
 ```bash
-# Terminal 1 — Game Server (must be running first)
-cd game-server
-cargo run
-
-# Terminal 2 — Backend
+# Terminal 1 — Backend (must be running first)
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env
+cargo run
+
+# Terminal 2 — Game Server
+cd game-server
 cargo run
 ```
 
 Verify both are running:
 ```bash
-curl http://localhost:8081/health
 curl http://localhost:8080/health
+curl http://localhost:8081/health
 curl http://localhost:8080/api/rewards/signer-pubkey
 ```
 
@@ -108,8 +106,28 @@ Improve error messages and logging across any service or route file. Errors shou
 
 ## Submission
 
-Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
+**Choose ONE of these methods:**
 
-1. Updated code (ZIP, GitHub repo, or pull request)
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and add your changes
+3. Email the repository link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Create a ZIP file with your completed work
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the download link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access:
+1. Create branch `candidate/<your-name>`
+2. Submit pull request to `main`
+
+---
+
+**Your submission must include:**
+1. Updated code (with your implementation)
 2. Brief summary (3-5 sentences): what you implemented, key decisions, tradeoffs
 3. Commands to test your changes
+
+**Email subject:** `SpinBattles Backend Assessment - [Your Name]`

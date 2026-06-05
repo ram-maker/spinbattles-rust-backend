@@ -18,22 +18,20 @@ You are free to use any frontend framework you are comfortable with (React, Next
 Both backend services must be running before you start the frontend:
 
 ```bash
-# Terminal 1 — Game Server
-cd game-server
-cargo run
-
-# Terminal 2 — Backend
+# Terminal 1 — Backend
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env
+cargo run
+
+# Terminal 2 — Game Server
+cd game-server
 cargo run
 ```
 
-Verify the backend is reachable:
+Verify both services are running:
 ```bash
-curl http://localhost:8081/health
 curl http://localhost:8080/health
+curl http://localhost:8081/health
 curl http://localhost:8080/api/rewards/signer-pubkey
 ```
 
@@ -139,8 +137,28 @@ GET http://localhost:8080/api/rewards/:address/history
 
 ## Submission
 
-Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
+**Choose ONE of these methods:**
 
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and add your frontend
+3. Email the repository link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Create a ZIP file with your completed work
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the download link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access:
+1. Create branch `candidate/<your-name>`
+2. Submit pull request to `main`
+
+---
+
+**Your submission must include:**
 1. Frontend source code in a `frontend/` directory at the repo root
 2. `frontend/README.md` with setup and run instructions
 3. Brief summary (3-5 sentences): framework chosen, decisions made, what you would improve with more time
+
+**Email subject:** `SpinBattles Fullstack Assessment - [Your Name]`

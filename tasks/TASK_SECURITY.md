@@ -14,22 +14,20 @@ SpinBattles is preparing to deploy a Rust-based Web3 reward system. Before launc
 ## Setup (Required)
 
 ```bash
-# Terminal 1 — Game Server
-cd game-server
-cargo run
-
-# Terminal 2 — Backend
+# Terminal 1 — Backend
 cd backend
 cp .env.example .env
-cargo run --bin keygen
-# Paste BACKEND_SIGNER_PRIVATE_KEY into .env
+cargo run
+
+# Terminal 2 — Game Server
+cd game-server
 cargo run
 ```
 
-Verify the backend is running and the signer is configured:
+Verify both services are running:
 ```bash
-curl http://localhost:8081/health
 curl http://localhost:8080/health
+curl http://localhost:8081/health
 curl http://localhost:8080/api/rewards/signer-pubkey
 ```
 
@@ -136,9 +134,29 @@ For your top 3 issues, provide fixed code — either as snippets in your reports
 
 ## Submission
 
-Submit from a **fork** (required for read-only access) or a **`candidate/<your-name>`** branch if given write access — do not push to `main`. Send a pull request or ZIP.
+**Choose ONE of these methods:**
 
+### Option 1: GitHub Repository (Recommended)
+1. Create a new public GitHub repository
+2. Copy this project and add your security reports
+3. Email the repository link to: **tech@spinbattles.com**
+
+### Option 2: File Sharing
+1. Create a ZIP file with your completed work
+2. Upload to Google Drive, Dropbox, or WeTransfer
+3. Email the download link to: **tech@spinbattles.com**
+
+### Option 3: Pull Request
+If you have write access:
+1. Create branch `candidate/<your-name>`
+2. Submit pull request to `main`
+
+---
+
+**Your submission must include:**
 1. `SECURITY_REPORT_PROGRAM.md`
 2. `SECURITY_REPORT_BACKEND.md`
 3. Fixed code for top 3 issues
-4. Summary (3-5 sentences) of the most critical findings
+4. Email summary (3-5 sentences) of the most critical findings
+
+**Email subject:** `SpinBattles Security Assessment - [Your Name]`
