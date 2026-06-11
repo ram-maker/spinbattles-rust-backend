@@ -1,0 +1,19 @@
+Here are the things that I changed:
+1.Implement On-Chain Token Balance Lookup
+
+I dervied pubkey for wallet and mint from the given parametes. I calculated the ata
+address from the mint address and the pubkey. I prefered using solana_clinet insted of reqwest client
+for calling the rpc in which chain is hosted, as it was compratively easy
+
+test commands used:
+cargo build
+commented SOLANA_RPC_URL and SBR_TOKEN_MINT to mock the rpc call and used the respective api endpoint and got mocked result
+
+
+2. Build reqwest client having timeout features
+test command used:/api/rewards/sign
+doesnt seem to be hanging
+
+3. CORS issue for fixed origin. Now only the orgin as defined on the cors layer would
+work. anything else would be blocked.
+

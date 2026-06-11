@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml">
+      <package file="$PROJECT_DIR$">
+        <feature name="default" enabled="true" />
+      </package>
+    </cargoProject>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3b2a31cc-fb43-474a-b803-28b8cb866ff8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/errors.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/errors.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/wallet_service.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/wallet_service.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="20" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="PNNm5CNJ" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000741085868088" />
+      <entry key="MS500" value="1.1562042033074638" />
+      <entry key="S2" value="2.304020242958594" />
+      <entry key="S5" value="4.933279784603826" />
+      <entry key="S10" value="8.666099429226998" />
+      <entry key="S30" value="20.867456620983962" />
+      <entry key="S60" value="36.79584228995858" />
+      <entry key="M2" value="63.338721074174764" />
+      <entry key="M5" value="119.15852882784212" />
+      <entry key="M10" value="175.72095367797132" />
+      <entry key="M15" value="219.48396622391135" />
+      <entry key="M30" value="332.60936513149704" />
+      <entry key="H1" value="485.4202513820979" />
+      <entry key="H2" value="627.7135105546423" />
+      <entry key="H4" value="728.0184867337537" />
+      <entry key="D1" value="832.4055889306445" />
+      <entry key="W1" value="852.5687812249536" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="4.7121520406822374E-271" />
+      <entry key="S2" value="3.701266597906302E-68" />
+      <entry key="S5" value="1.5805229982321236E-27" />
+      <entry key="S10" value="5.6018313951112906E-14" />
+      <entry key="S30" value="6.068881231496244E-5" />
+      <entry key="S60" value="0.011016027535284566" />
+      <entry key="M2" value="0.148495667016122" />
+      <entry key="M5" value="0.7400438451461379" />
+      <entry key="M10" value="1.5352967949885739" />
+      <entry key="M15" value="2.4781970902700654" />
+      <entry key="M30" value="6.788953830214736" />
+      <entry key="H1" value="15.146566247429936" />
+      <entry key="H2" value="24.18421773131645" />
+      <entry key="H4" value="30.979525227139415" />
+      <entry key="D1" value="38.31236092423013" />
+      <entry key="W1" value="39.753948640945964" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.8351575461319966" />
+      <entry key="MS500" value="1.118909913034427" />
+      <entry key="S2" value="2.290732142952306" />
+      <entry key="S5" value="4.922580636217421" />
+      <entry key="S10" value="8.656460737470441" />
+      <entry key="S30" value="20.85968109553235" />
+      <entry key="S60" value="36.799817836657176" />
+      <entry key="M2" value="63.48069724286773" />
+      <entry key="M5" value="119.89286501799171" />
+      <entry key="M10" value="177.2504228024471" />
+      <entry key="M15" value="221.9553305406825" />
+      <entry key="M30" value="339.387805753242" />
+      <entry key="H1" value="500.5543872134398" />
+      <entry key="H2" value="651.8875010534041" />
+      <entry key="H4" value="758.9913582619346" />
+      <entry key="D1" value="870.7165599234446" />
+      <entry key="W1" value="892.3225233519729" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3EzlFNpNjPwiXA0RtNtRyAKY4uf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Cargo.Run keygen.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;candidate/ram&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
+    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
+    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Cargo.Run keygen">
+    <configuration name="Run keygen" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package spinbattles-backend --bin keygen" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test spinbattles-backend" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="test --workspace" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3b2a31cc-fb43-474a-b803-28b8cb866ff8" name="Changes" comment="" />
+      <created>1781189176277</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1781189176277</updated>
+      <workItem from="1781189177237" duration="9321000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
