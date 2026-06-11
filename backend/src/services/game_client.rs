@@ -1,5 +1,6 @@
 use crate::{errors::AppError, models::PendingBattle};
 use serde::Deserialize;
+use solana_sdk::client;
 
 /// Game Client
 ///
@@ -83,8 +84,12 @@ pub async fn get_pending_battles(address: &str) -> Result<Vec<PendingBattle>, Ap
 /// Returns `(eligible, reward_lamports)` or an error if the game server is down.
 pub async fn verify_battle(battle_id: &str) -> Result<VerifyResponse, AppError> {
     let url = format!("{}/battles/{}/verify", game_server_url(), battle_id);
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(5))
+        .build()
+        .map_err(|e| AppError::Internal(e.into()))?;
 
-    let response = reqwest::get(&url).await.map_err(|e| {
+    let response = client.get(&url).send().await.map_err(|e| {
         tracing::error!("Game server unreachable at {}: {}", url, e);
         AppError::GameServerUnavailable
     })?;
