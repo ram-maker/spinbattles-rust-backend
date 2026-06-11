@@ -73,9 +73,14 @@ pub async fn get_token_balance(address: &str) -> Result<(String, String), AppErr
     let mint = std::env::var("SBR_TOKEN_MINT").ok();
 
     if let (Some(rpc_url), Some(mint_address)) = (rpc_url, mint) {
-        let wallet_pubkey = Pubkey::from_str(address).map_err(|e| AppError::Internal(e.into()))?;
-        let mint_pubkey =
-            Pubkey::from_str(&mint_address).map_err(|e| AppError::Internal(e.into()))?;
+        let wallet_pubkey = Pubkey::from_str(address).map_err(|e| {
+            tracing::error!("Invalid Solana public key: {}", e);
+            AppError::Internal(e.into())
+        })?;
+        let mint_pubkey = Pubkey::from_str(&mint_address).map_err(|e| {
+            tracing::error!("Invalid SBR mint address: {}", e);
+            AppError::Internal(e.into())
+        })?;
         let ata_address = get_associated_token_address(&wallet_pubkey, &mint_pubkey);
 
         // 3. Create the RPC client and query the node

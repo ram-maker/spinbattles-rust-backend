@@ -36,8 +36,7 @@ impl IntoResponse for AppError {
             AppError::SignerNotConfigured      => (StatusCode::SERVICE_UNAVAILABLE, "Signer not configured — set BACKEND_SIGNER_PRIVATE_KEY in .env".into()),
             AppError::AlreadyClaimed           => (StatusCode::CONFLICT, "Reward already claimed".into()),
             AppError::GameServerUnavailable    => (StatusCode::SERVICE_UNAVAILABLE, "Game server unavailable — ensure it is running on port 8081".into()),
-            AppError::Internal(_)              => (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error".into()),
-            AppError::InvalidAddress(_)        => (StatusCode::NOT_FOUND, "Invalid address".into()),
+            AppError::Internal(e)              => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
         };
 
         // Never leak internal details or stack traces in the response body
