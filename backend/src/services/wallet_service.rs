@@ -1,5 +1,7 @@
 use crate::errors::AppError;
+use solana_client::rpc_client::RpcClient;
 use solana_sdk::{pubkey::Pubkey, signature::Signature};
+use spl_associated_token_account::get_associated_token_address;
 use std::str::FromStr;
 
 /// Wallet Service
@@ -70,12 +72,23 @@ pub async fn get_token_balance(address: &str) -> Result<(String, String), AppErr
     let rpc_url = std::env::var("SOLANA_RPC_URL").ok();
     let mint = std::env::var("SBR_TOKEN_MINT").ok();
 
-    if rpc_url.is_some() && mint.is_some() {
-        // RPC integration is optional for this assessment project, so we keep a
-        // deterministic fallback until a networked token-balance path is required.
-        tracing::warn!("Real on-chain balance query not yet implemented — falling back to mock");
-    }
+    if let (Some(rpc_url), Some(mint_address)) = (rpc_url, mint) {
+        let wallet_pubkey = Pubkey::from_str(address).map_err(|e| AppError::Internal(e.into()))?;
+        let mint_pubkey =
+            Pubkey::from_str(&mint_address).map_err(|e| AppError::Internal(e.into()))?;
+        let ata_address = get_associated_token_address(&wallet_pubkey, &mint_pubkey);
 
+        // 3. Create the RPC client and query the node
+        // Note: RpcClient calls are blocking by default; wrap in spawn_blocking for async hygiene
+        let client = RpcClient::new(rpc_url);
+        let balance = client
+            .get_token_account_balance(&ata_address)
+            .map_err(|e| AppError::Internal(e.into()))?;
+        let lamports_string = balance.amount;
+        let ui_string = format!("{} SBR", balance.ui_amount_string);
+
+        return Ok((lamports_string, ui_string));
+    }
     tracing::debug!("Using mock balance for: {}", address);
     Ok(crate::mock_data::get_mock_balance(address))
 }

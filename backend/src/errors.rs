@@ -7,6 +7,7 @@ pub enum AppError {
     #[error("Invalid input: {0}")]
     BadRequest(String),
 
+
     #[error("Not found: {0}")]
     NotFound(String),
 
@@ -36,6 +37,7 @@ impl IntoResponse for AppError {
             AppError::AlreadyClaimed           => (StatusCode::CONFLICT, "Reward already claimed".into()),
             AppError::GameServerUnavailable    => (StatusCode::SERVICE_UNAVAILABLE, "Game server unavailable — ensure it is running on port 8081".into()),
             AppError::Internal(_)              => (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error".into()),
+            AppError::InvalidAddress(_)        => (StatusCode::NOT_FOUND, "Invalid address".into()),
         };
 
         // Never leak internal details or stack traces in the response body
