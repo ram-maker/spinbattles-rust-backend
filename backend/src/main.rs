@@ -1,4 +1,6 @@
+use axum::http::Method;
 use axum::{
+    http::HeaderValue,
     routing::{get, post},
     Router,
 };
@@ -22,8 +24,10 @@ async fn main() {
 
     // Tracing
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| "spinbattles_backend=debug,tower_http=debug".into()))
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "spinbattles_backend=debug,tower_http=debug".into()),
+        )
         .with(tracing_subscriber::fmt::layer())
         .init();
 
@@ -35,14 +39,34 @@ async fn main() {
         .route("/health", get(routes::health::health_check))
         // Wallet routes
         .route("/api/wallet/verify", post(routes::wallet::verify_signature))
-        .route("/api/wallet/:address/balance", get(routes::wallet::get_balance))
+        .route(
+            "/api/wallet/:address/balance",
+            get(routes::wallet::get_balance),
+        )
         // Reward routes — static paths MUST come before wildcard :address routes
-        .route("/api/rewards/signer-pubkey", get(routes::rewards::get_signer_pubkey))
+        .route(
+            "/api/rewards/signer-pubkey",
+            get(routes::rewards::get_signer_pubkey),
+        )
         .route("/api/rewards/sign", post(routes::rewards::sign_claim))
         .route("/api/rewards/claim", post(routes::rewards::record_claim))
-        .route("/api/rewards/pending/:address", get(routes::rewards::get_pending))
-        .route("/api/rewards/:address/history", get(routes::rewards::get_history))
-        .layer(CorsLayer::permissive())
+        .route(
+            "/api/rewards/pending/:address",
+            get(routes::rewards::get_pending),
+        )
+        .route(
+            "/api/rewards/:address/history",
+            get(routes::rewards::get_history),
+        )
+        .layer(
+            CorsLayer::new()
+                .allow_origin(
+                    "http://localhost:5173"
+                        .parse::<HeaderValue>()
+                        .expect("Error Parsing Header Value"),
+                )
+                .allow_methods([Method::GET, Method::POST, Method::OPTIONS]),
+        )
         .with_state(state);
 
     let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
